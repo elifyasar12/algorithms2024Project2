@@ -1,20 +1,32 @@
-from src.portfolio_optimizer import PortfolioOptimizer
+from src.stock_fetcher import StockFetcher
+from src.monte_carlo import MonteCarloSimulator
+
 
 if __name__ == "__main__":
     # Alpha Vantage API Key
     api_key = "QQ1BBACXBOTLITS9"
-    optimizer = PortfolioOptimizer(api_key)
 
-    # Tickers and initial investment
+    # Initialize the StockFetcher
+    fetcher = StockFetcher(api_key)
+
+    # Define tickers and initial investment
     tickers = ["AAPL", "GOOGL", "AMZN"]
     initial_investment = 10000
 
-    # Run Monte Carlo Simulation
-    portfolio_values = optimizer.monte_carlo_simulation(tickers, initial_investment)
+    # Fetch stock prices
+    portfolio_prices = fetcher.fetch_portfolio_prices(tickers)
 
-    # Check if simulation data exists before proceeding
-    if portfolio_values is not None:
-        # Calculate VaR
-        optimizer.calculate_var(portfolio_values, confidence_level=0.95)
+    if not portfolio_prices:
+        print("Error: Could not fetch any stock prices.")
     else:
-        print("Portfolio simulation could not be completed due to missing data.")
+        print(f"Portfolio prices: {portfolio_prices}")
+
+        # Initialize MonteCarloSimulator
+        simulator = MonteCarloSimulator(portfolio_prices, initial_investment)
+
+        # Run simulation
+        portfolio_values = simulator.simulate()
+
+        if portfolio_values is not None:
+            # Plot simulation results
+            simulator.plot_simulation(portfolio_values)
