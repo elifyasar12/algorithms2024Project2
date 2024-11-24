@@ -8,7 +8,7 @@ class MonteCarloSimulator:
         self.portfolio = portfolio
         self.initial_investment = initial_investment
 
-    def simulate(self, num_simulations=100, time_horizon=50):
+    def simulate(self, num_simulations=500, time_horizon=250):
         """Runs a Monte Carlo simulation for portfolio returns."""
         if not self.portfolio:
             print("Error: Portfolio is empty. Cannot run simulation.")
