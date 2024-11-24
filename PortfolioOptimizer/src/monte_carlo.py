@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
 
 class MonteCarloSimulator:
@@ -7,7 +8,7 @@ class MonteCarloSimulator:
         self.portfolio = portfolio
         self.initial_investment = initial_investment
 
-    def simulate(self, num_simulations=1000, time_horizon=252):
+    def simulate(self, num_simulations=100, time_horizon=50):
         """Runs a Monte Carlo simulation for portfolio returns."""
         if not self.portfolio:
             print("Error: Portfolio is empty. Cannot run simulation.")
@@ -27,12 +28,18 @@ class MonteCarloSimulator:
 
         return portfolio_values
 
-    def plot_simulation(self, portfolio_values):
-        """Plots the Monte Carlo simulation results."""
+    def export_simulation_graph(self, portfolio_values, filename="monte_carlo_simulation.png"):
+        """Saves the Monte Carlo simulation results to a graph."""
+        output_dir = "graphs"
+        os.makedirs(output_dir, exist_ok=True)  # Create directory if it doesn't exist
+        filepath = os.path.join(output_dir, filename)
+
         plt.figure(figsize=(10, 6))
         plt.plot(portfolio_values, alpha=0.1, color='blue')
         plt.title('Monte Carlo Simulation for Portfolio Returns')
         plt.xlabel('Days')
         plt.ylabel('Portfolio Value')
         plt.grid()
+        plt.savefig(filepath)  # Save the plot as an image file
+        print(f"Simulation graph saved as {filepath}")
         plt.show()
