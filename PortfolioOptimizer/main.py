@@ -67,7 +67,7 @@ if __name__ == "__main__":
         simulator = MonteCarloSimulator(portfolio_prices, initial_investment)
 
         # Run simulation
-        portfolio_values = simulator.simulate(num_simulations=100, time_horizon=50)
+        portfolio_values = simulator.simulate(num_simulations=500, time_horizon=250)
 
         if portfolio_values is not None:
             # Export simulation graph
