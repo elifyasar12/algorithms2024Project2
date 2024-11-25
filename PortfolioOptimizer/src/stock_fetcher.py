@@ -40,18 +40,78 @@
 #         return portfolio
 
 
+# import yfinance as yf
+
+
+# class StockFetcher:
+#     def __init__(self):
+#         pass
+
+#     def fetch_stock_price(self, ticker):
+#         """Fetches the current price of a stock using Yahoo Finance."""
+#         try:
+#             stock = yf.Ticker(ticker)
+#             price = stock.history(period="1d")["Close"].iloc[-1]  # Get the latest closing price
+#             print(f"Fetched price for {ticker}: {price:.2f}")
+#             return price
+#         except Exception as e:
+#             print(f"Error fetching price for {ticker}: {e}")
+#             return None
+
+#     def fetch_portfolio_prices(self, tickers):
+#         """Fetches prices for a list of tickers."""
+#         portfolio = {}
+#         for ticker in tickers:
+#             price = self.fetch_stock_price(ticker)
+#             if price:
+#                 portfolio[ticker] = price
+#         return portfolio
+
+# import yfinance as yf
+
+# class StockFetcher:
+#     def __init__(self):
+#         pass
+
+#     def fetch_stock_price(self, ticker):
+#         """
+#         Fetches the current price of a stock using Yahoo Finance.
+#         """
+#         try:
+#             stock = yf.Ticker(ticker)
+#             price = stock.history(period="1d")["Close"].iloc[-1]  # Get the latest closing price
+#             print(f"Fetched price for {ticker}: {price:.2f}")
+#             return price
+#         except Exception as e:
+#             print(f"Error fetching price for {ticker}: {e}")
+#             return None
+
+#     def fetch_portfolio_prices(self, tickers):
+#         """
+#         Fetches prices for a list of tickers.
+#         """
+#         portfolio = {}
+#         for ticker in tickers:
+#             price = self.fetch_stock_price(ticker)
+#             if price:
+#                 portfolio[ticker] = price
+#         return portfolio
+
+import numpy as np
+import os
+import matplotlib.pyplot as plt
 import yfinance as yf
+import heapq
 
 
 class StockFetcher:
-    def __init__(self):
-        pass
-
     def fetch_stock_price(self, ticker):
-        """Fetches the current price of a stock using Yahoo Finance."""
         try:
             stock = yf.Ticker(ticker)
-            price = stock.history(period="1d")["Close"].iloc[-1]  # Get the latest closing price
+            history = stock.history(period="1d")
+            if history.empty:
+                raise ValueError(f"No data returned for {ticker}")
+            price = history["Close"].iloc[-1]
             print(f"Fetched price for {ticker}: {price:.2f}")
             return price
         except Exception as e:
@@ -59,10 +119,11 @@ class StockFetcher:
             return None
 
     def fetch_portfolio_prices(self, tickers):
-        """Fetches prices for a list of tickers."""
         portfolio = {}
         for ticker in tickers:
             price = self.fetch_stock_price(ticker)
             if price:
                 portfolio[ticker] = price
+        if not portfolio:
+            print("Error: No valid stock prices could be fetched.")
         return portfolio
