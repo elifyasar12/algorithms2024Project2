@@ -254,6 +254,34 @@
 #             heap = heap_map.generate_heap()
 #             heap_map.display_heap(heap)
 
+# from src.stock_fetcher import StockFetcher
+# from src.monte_carlo import MonteCarloSimulator
+# from src.risk_metrics import RiskMetrics
+# from src.heap_map import HeapMap
+
+
+# if __name__ == "__main__":
+#     fetcher = StockFetcher()
+#     tickers = ["AAPL", "GOOGL", "AMZN", "FDX"]
+#     initial_investment = 10000
+
+#     portfolio_prices = fetcher.fetch_portfolio_prices(tickers)
+#     if portfolio_prices:
+#         simulator = MonteCarloSimulator(portfolio_prices, initial_investment)
+#         portfolio_values = simulator.simulate()
+
+#         if portfolio_values is not None:
+#             simulator.export_simulation_graph(portfolio_values)
+
+#             risk_metrics = RiskMetrics(portfolio_values)
+#             risk_metrics.calculate_var()
+#             risk_metrics.plot_distribution()
+
+#             heap_map = HeapMap(portfolio_values, tickers)
+#             heap = heap_map.generate_heap()
+#             heap_map.display_heap(heap)
+
+
 from src.stock_fetcher import StockFetcher
 from src.monte_carlo import MonteCarloSimulator
 from src.risk_metrics import RiskMetrics
@@ -280,3 +308,6 @@ if __name__ == "__main__":
             heap_map = HeapMap(portfolio_values, tickers)
             heap = heap_map.generate_heap()
             heap_map.display_heap(heap)
+            #heap_map.display_heap(heap)
+            heap_map.export_treemap(heap)
+            heap_map.export_heap_tree(heap)
