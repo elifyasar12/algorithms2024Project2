@@ -277,6 +277,7 @@ import heapq
 import squarify  # Install this with `pip install squarify`
 import networkx as nx
 
+
 class HeapMap:
     def __init__(self, portfolio_values, asset_names):
         if portfolio_values.ndim != 3:
@@ -291,8 +292,13 @@ class HeapMap:
         risks = []
 
         for i, asset in enumerate(self.asset_names):
+            #daily_returns = np.diff(asset_values[i], axis=0) / asset_values[i][:-1]
             daily_returns = np.diff(asset_values[i], axis=0) / asset_values[i][:-1]
-            risk = np.std(daily_returns)
+            #print(f"Asset: {asset}, Daily Returns Sample: {daily_returns[:5]}")
+
+            #risk = np.std(daily_returns)
+            risk = np.std(daily_returns) + np.abs(np.mean(daily_returns))  # Combines volatility and average return
+            print(f"Asset: {asset}, Daily Returns Sample: {daily_returns[:5]}")
             risks.append((risk, asset))
 
         return risks
@@ -338,9 +344,49 @@ class HeapMap:
         print(f"Treemap graph saved as {filepath}")
         plt.show()
 
+    # def export_heap_tree(self, heap, filename="heap_tree.png"):
+    #     """
+    #     Exports a tree visualization of the heap.
+    #     """
+    #     os.makedirs("graphs", exist_ok=True)
+    #     filepath = os.path.join("graphs", filename)
+
+    #     G = nx.DiGraph()  # Directed graph for heap
+
+    #     # Create a binary tree from the heap
+    #     for i, (neg_risk, asset) in enumerate(heap):
+    #         G.add_node(i, label=f"{asset}\nRisk: {-neg_risk:.4f}")
+    #         left = 2 * i + 1
+    #         right = 2 * i + 2
+    #         if left < len(heap):
+    #             G.add_edge(i, left)
+    #         if right < len(heap):
+    #             G.add_edge(i, right)
+
+    #     # Draw the graph
+    #     pos = nx.nx_agraph.graphviz_layout(G, prog="dot")  # Use Graphviz for tree layout
+    #     labels = nx.get_node_attributes(G, "label")
+
+    #     plt.figure(figsize=(12, 8))
+    #     nx.draw(
+    #         G,
+    #         pos,
+    #         labels=labels,
+    #         with_labels=True,
+    #         node_size=2000,
+    #         node_color="lightblue",
+    #         font_size=8,
+    #         font_weight="bold",
+    #         arrows=False,
+    #     )
+    #     plt.title("Heap Tree Visualization", fontsize=18)
+    #     plt.savefig(filepath)
+    #     print(f"Heap tree graph saved as {filepath}")
+    #     plt.show()
+
     def export_heap_tree(self, heap, filename="heap_tree.png"):
         """
-        Exports a tree visualization of the heap.
+        Exports a tree visualization of the heap using spring layout.
         """
         os.makedirs("graphs", exist_ok=True)
         filepath = os.path.join("graphs", filename)
@@ -352,13 +398,13 @@ class HeapMap:
             G.add_node(i, label=f"{asset}\nRisk: {-neg_risk:.4f}")
             left = 2 * i + 1
             right = 2 * i + 2
-            if left < len(heap):
-                G.add_edge(i, left)
-            if right < len(heap):
-                G.add_edge(i, right)
+        if left < len(heap):
+            G.add_edge(i, left)
+        if right < len(heap):
+            G.add_edge(i, right)
 
-        # Draw the graph
-        pos = nx.nx_agraph.graphviz_layout(G, prog="dot")  # Use Graphviz for tree layout
+        # Use spring layout (no external dependencies required)
+        pos = nx.spring_layout(G, seed=42)
         labels = nx.get_node_attributes(G, "label")
 
         plt.figure(figsize=(12, 8))

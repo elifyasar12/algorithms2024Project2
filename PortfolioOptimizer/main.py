@@ -290,7 +290,7 @@ from src.heap_map import HeapMap
 
 if __name__ == "__main__":
     fetcher = StockFetcher()
-    tickers = ["AAPL", "GOOGL", "AMZN", "FDX"]
+    tickers = ["AAPL", "GOOGL", "AMZN", "FDX", "BLK", "JPM", "APLD", "VST", "WING"]
     initial_investment = 10000
 
     portfolio_prices = fetcher.fetch_portfolio_prices(tickers)

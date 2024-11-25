@@ -417,12 +417,35 @@ class MonteCarloSimulator:
         self.portfolio = portfolio
         self.initial_investment = initial_investment
 
+    # def simulate(self, num_simulations=500, time_horizon=365):
+    #     weights = np.array([1 / len(self.portfolio)] * len(self.portfolio))
+    #     asset_prices = np.array(list(self.portfolio.values()))
+    #     num_assets = len(self.portfolio)
+
+    #     #daily_returns = np.random.normal(0.001, 0.02, (time_horizon, num_assets, num_simulations))
+    #     daily_returns = np.random.normal(0.001, np.random.uniform(0.01, 0.05, num_assets).reshape(-1, 1, 1), (time_horizon, num_assets, num_simulations))
+
+    #     portfolio_values = np.zeros((time_horizon, num_simulations, num_assets))
+
+    #     for i in range(num_assets):
+    #         cumulative_returns = np.cumprod(1 + daily_returns[:, i, :], axis=0) - 1
+    #         portfolio_values[:, :, i] = asset_prices[i] * (1 + cumulative_returns)
+
+    #     return portfolio_values
+
     def simulate(self, num_simulations=500, time_horizon=365):
         weights = np.array([1 / len(self.portfolio)] * len(self.portfolio))
         asset_prices = np.array(list(self.portfolio.values()))
         num_assets = len(self.portfolio)
 
-        daily_returns = np.random.normal(0.001, 0.02, (time_horizon, num_assets, num_simulations))
+        # Generate daily returns with per-asset variability
+        asset_volatility = np.random.uniform(0.01, 0.05, num_assets)  # Volatility per asset
+        daily_returns = np.random.normal(
+            loc=0.001,  # Mean return
+            scale=asset_volatility[:, np.newaxis],  # np.newaxis# Broadcast volatility for time and simulations
+            size=(time_horizon, num_assets, num_simulations)
+    )
+
         portfolio_values = np.zeros((time_horizon, num_simulations, num_assets))
 
         for i in range(num_assets):
@@ -430,6 +453,7 @@ class MonteCarloSimulator:
             portfolio_values[:, :, i] = asset_prices[i] * (1 + cumulative_returns)
 
         return portfolio_values
+
 
     def export_simulation_graph(self, portfolio_values, filename="monte_carlo_simulation.png"):
         os.makedirs("graphs", exist_ok=True)
